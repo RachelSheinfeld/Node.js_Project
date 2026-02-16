@@ -1,15 +1,24 @@
+require('dotenv').config();
 const express = require('express');
-const mongoose = require('mongoose'); // ייבוא של mongoose
+const mongoose = require('mongoose');
+const recipeRoutes = require('./routes/recipeRoutes');
+const authRoutes = require('./routes/authRoutes');
+
 const app = express();
 
-// מחרוזת ההתחברות שהעתקת מהאתר של MongoDB
+// זה התיקון הקריטי שהוספת - מעולה!
+app.use(express.json());
+
+// חיבור הנתיבים
+app.use('/api/auth', authRoutes);
+app.use('/api/recipes', recipeRoutes);
+
+// עדיף למשוך את הכתובת מה-env (MONGO_URI)
 const dbURI = 'mongodb+srv://r0583226902_db_user:5fr9iER16GmkVIiB@clusterrachelisheinfeld.dp1lppg.mongodb.net/?appName=clusterRacheliSheinfeld';
 
-// התחברות למסד הנתונים
 mongoose.connect(dbURI)
   .then(() => {
     console.log("Connected to MongoDB successfully!");
-    // רק אחרי שהתחברנו למסד הנתונים, נפעיל את השרת
     app.listen(3000, () => {
       console.log("Server is running on port 3000");
     });
@@ -17,3 +26,4 @@ mongoose.connect(dbURI)
   .catch((err) => {
     console.log("Connection error:", err);
   });
+
